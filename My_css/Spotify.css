@@ -1,0 +1,14 @@
+:root {
+  --text: #ffffff;
+  --bg: #121212;
+  --bg-light: #1b1b1b;
+  --primary: #1DB954;
+  --secondary: #1ed760;
+  --card: #181818;
+  --card-hover: #282828;
+  --gradient-1: linear-gradient(135deg, #1db954, #191414);
+  --gradient-2: linear-gradient(180deg, #1db954, #121212);
+  --border: 1px solid #ffffff12;
+  --radius: 14px;
+  --shadow: 0 15px 40px rgba(0, 0, 0, .45);
+}

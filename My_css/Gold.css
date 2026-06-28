@@ -1,0 +1,12 @@
+:root {
+  --text: #fdf6e3;
+  --bg: #111111;
+  --card: #1c1c1c;
+  --gold: #d4af37;
+  --gold-light: #ffd700;
+  --gradient-1: linear-gradient(135deg, #000000, #d4af37);
+  --gradient-2: linear-gradient(90deg, #ffd700, #b8860b);
+  --border: 1px solid #d4af3760;
+  --radius: 20px;
+  --shadow: 0 15px 40px rgba(212, 175, 55, .25);
+}

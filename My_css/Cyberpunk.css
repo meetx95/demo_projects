@@ -1,0 +1,13 @@
+:root {
+  --text: #ffffff;
+  --bg: #080808;
+  --card: #101010;
+  --primary: #00f5ff;
+  --secondary: #ff00c8;
+  --accent: #ffee00;
+  --gradient-1: linear-gradient(135deg, #00f5ff, #ff00c8);
+  --gradient-2: linear-gradient(90deg, #ffee00, #ff00c8);
+  --border: 1px solid #00f5ff55;
+  --radius: 18px;
+  --shadow: 0 0 25px #00f5ff55;
+}
