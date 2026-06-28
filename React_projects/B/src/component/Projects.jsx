@@ -1,8 +1,20 @@
 function Projects() {
-  const projects = [
-    { title: "AI Chat Application", desc: "Modern AI interface with responsive frontend and animations." },
-    { title: "Developer Portfolio", desc: "Premium frontend portfolio with futuristic glassmorphism UI." },
-    { title: "Motion Graphics Showcase", desc: "Cinematic edits, visual effects, and typography animations." }
+  const projects = [{
+    title: "AI Chat Application",
+    desc: "Modern AI interface with responsive frontend and animations."
+  }, {
+    title: "Apple Portfolio",
+    desc: "Premium frontend portfolio with futuristic glassmorphism UI."
+  }, {
+    title: "Motion Graphics Showcase",
+    desc: "Cinematic edits, visual effects, and typography animations."
+  }, {
+    title: "E-commerce Platform",
+    desc: "Full-stack e-commerce platform with secure payment integration."
+  }, {
+    title: "Social Media Dashboard",
+    desc: "Interactive dashboard with real-time analytics and user engagement."
+  }
   ];
 
   return (

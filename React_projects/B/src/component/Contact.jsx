@@ -1,8 +1,6 @@
 function Contact() {
   return (
-    <section
-      className="contact"
-      id="contact">
+    <section className="contact" id="contact">
 
       <h2 className="section-title">
         Let's Work Together
