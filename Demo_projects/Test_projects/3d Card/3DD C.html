@@ -1,0 +1,89 @@
+<html>
+<head>
+  <title>3D Card Explode C</title>
+</head>
+<body>
+  <center>
+    <div class="container">
+      <div class="card">
+        <p>
+        <div>Hey, I'm <span class="s1">Meet😅</span></div>
+        <div>I'm a <span class="s2">Frontend Developer</span></div>
+        <div>and also a <span class="s3">Motion Designer.</span></div>
+        </p>
+      </div>
+      <div class="box">
+        <div class="A" id="A">A</div>
+        <div class="A" id="B">B</div>
+        <div class="A" id="C">C</div>
+        <div class="A" id="D">D</div>
+        <div class="A" id="E">E</div>
+      </div>
+    </div>
+  </center>
+</body>
+</html>
+<style>
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background: radial-gradient(circle at top left, #4f46e5, #0f172a 50%), #000;
+    font-family: arial black, sans-serif;
+    overflow: hidden;
+  }
+
+  body {
+    align-content: center;
+  }
+  
+  .A {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.2) rotate(0deg);
+    transition: .8s cubic-bezier(.175, .885, .32, 1.275);
+  }
+  
+  .container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+  }
+  
+  /* Hover */
+  .container:hover #A { opacity: 1; transform: translate(-50%, -50%) translate(-180px, -120px) rotateY(40deg) rotateX(20deg) scale(1); }
+  .container:hover #B { opacity: 1; transform: translate(-50%, -50%) translate(180px, -120px) rotateY(-40deg) rotateX(20deg) scale(1); }
+  .container:hover #C { opacity: 1; transform: translate(-50%, -50%) translate(-180px, 120px) rotateY(40deg) rotateX(-20deg) scale(1); }
+  .container:hover #D { opacity: 1; transform: translate(-50%, -50%) translate(180px, 120px) rotateY(-40deg) rotateX(-20deg) scale(1); }
+  .container:hover #E { opacity: 1; transform: translate(-50%, -50%) translate(0, -220px) rotateX(40deg) scale(1); }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    transition: .4s ease;
+  }
+
+  .container:hover .card {
+    transform:
+      perspective(1000px) rotateX(8deg) scale(1.05);
+  }
+
+  #A { background: #416bc7; transition-delay: 0s;   }
+  #B { background: #30a726; transition-delay: .05s; }
+  #C { background: #fa9638; transition-delay: .1s;  } 
+  #D { background: #ff4d6d; transition-delay: .15s; } 
+  #E { background: #8b5cf6; transition-delay: .2s;  }
+
+  .container:hover .A {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, .5), 0 0 40px #00000026;
+  }
+</style>

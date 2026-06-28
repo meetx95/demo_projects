@@ -1,0 +1,134 @@
+<html>
+<head>
+  <title>HBD MOON</title>
+  <script src="jquery.min.js"></script>
+</head>
+<body>
+  <h1 id="title">Happy Birthday Moon</h1>
+  <div class="menu">
+    <button onclick="loadContent('wish')">Birthday Wish</button>
+    <button onclick="loadContent('message')">Message</button>
+    <button onclick="loadContent('memories')">Memories</button>
+    <button onclick="loadContent('voice')">Voice Note</button>
+  </div>
+  <div id="content"></div>
+</body>
+<script>
+$(document).ready(function () {
+  $("#title").fadeIn(500).slideDown();
+  
+  setTimeout(function () {
+    $(".menu").fadeIn(500);
+  }, 500);
+});
+function loadContent(type) {
+  $.ajax({
+    url: type + ".html",
+    success: function (data) {
+      $("#content").hide().html(data).fadeIn(500);
+    }
+  });
+}
+</script>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  background: radial-gradient(circle at top, #0b1a2a, #02070d);
+  color: #dbeafe;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top: 50px;
+  right: 80px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, #bcdcff, #3b82f6, transparent);
+  border-radius: 50%;
+  filter: blur(25px);
+  opacity: 0.6;
+}
+#title {
+  font-size: 2.5rem;
+  margin-top: 50px;
+  color: #93c5fd;
+  text-shadow: 0 0 10px rgba(147,197,253,0.8);
+  display: none;
+}
+.menu {
+  margin-top: 30px;
+  display: none;
+}
+.menu button {
+  margin: 10px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 10px rgba(59,130,246,0.4);
+}
+.menu button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  box-shadow: 0 0 20px rgba(96,165,250,0.8);
+}
+#content {
+  margin: 30px auto;
+  width: 80%;
+  max-width: 700px;
+  background: rgba(15, 23, 42, 0.7);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 25px rgba(59,130,246,0.2);
+  animation: fadeIn 0.5s ease;
+  display: none;
+}
+.box {
+  background: rgba(30, 58, 138, 0.3);
+  border-left: 4px solid #60a5fa;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 10px;
+  text-align: left;
+  transition: 0.3s;
+}
+.box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 15px rgba(96,165,250,0.5);
+}
+img {
+  width: 100%;
+}
+.date, .time {
+  font-size: 12px;
+  color: #93c5fd;
+}
+.note {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #e0f2fe;
+}
+h2 {
+  color: #bfdbfe;
+  text-shadow: 0 0 8px rgba(191,219,254,0.6);
+}
+audio {
+  margin-top: 20px;
+  width: 100%;
+  filter: drop-shadow(0 0 10px #3b82f6);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</html>

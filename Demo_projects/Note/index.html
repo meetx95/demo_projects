@@ -1,0 +1,170 @@
+<html>
+
+<head>
+  <title>Notes</title>
+</head>
+
+<body>
+  <div class="app">
+    <h2>Notes</h2>
+    <input id="input" placeholder="New note">
+    <button onclick="add()">+</button>
+    <ul id="list"></ul>
+  </div>
+  <footer class="watermark">
+    <span>©2026 Meet</span>
+  </footer>
+</body>
+
+</html>
+<script>
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  function save() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
+
+  function render() {
+    list.innerHTML = "";
+
+    tasks.forEach((t, i) => {
+      const li = document.createElement("li");
+      li.textContent = t.text;
+
+      if (t.done) li.classList.add("done");
+
+      li.onclick = () => {
+        tasks[i].done = !tasks[i].done;
+        save();
+        render();
+      };
+
+      const del = document.createElement("span");
+      del.textContent = "❌";
+      del.onclick = (e) => {
+        e.stopPropagation();
+        tasks.splice(i, 1);
+        save();
+        render();
+      };
+
+      li.appendChild(del);
+      list.appendChild(li);
+    });
+  }
+
+  function add() {
+    if (!input.value) return;
+
+    tasks.push({ text: input.value, done: false });
+    input.value = "";
+    save();
+    render();
+  }
+
+  render();
+</script>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .app {
+    width: 320px;
+    background: #111827;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+
+  h2 {
+    margin-bottom: 15px;
+  }
+
+  input {
+    width: 65%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+  }
+
+  button {
+    padding: 10px 12px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 8px;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #16a34a;
+  }
+
+  ul {
+    padding: 0;
+    margin-top: 15px;
+  }
+
+  li {
+    list-style: none;
+    background: #1e293b;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+  }
+
+  li:hover {
+    transform: scale(1.03);
+  }
+
+  .done {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+
+  span {
+    cursor: pointer;
+  }
+
+  .watermark {
+    position: fixed;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+    transition: 0.3s ease;
+  }
+
+  .watermark span {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* subtle glow on hover (optional aesthetic) */
+  .watermark:hover {
+    color: rgba(255, 255, 255, 0.5);
+  }
+</style>

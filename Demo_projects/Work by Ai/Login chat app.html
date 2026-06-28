@@ -1,0 +1,98 @@
+<html lang="en">
+<head>
+  <title>Project-84</title>
+</head>
+<body>
+  <center>
+<!-- LOGIN -->
+<div class="container" id="loginPage">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- PROFILE -->
+<div class="container hidden" id="profilePage">
+  <h2>Profile</h2>
+  <p id="userDisplay"></p>
+  <button onclick="goToChat()">Go to Chat</button>
+</div>
+
+<!-- CHAT -->
+<div class="container hidden" id="chatPage">
+  <h2>Chat</h2>
+  <div class="chat-box" id="chatBox"></div>
+  <input type="text" id="message" placeholder="Type message">
+  <button onclick="sendMessage()">Send</button>
+</div>
+</center>
+<script>
+let currentUser = "";
+function login() {
+  let user = document.getElementById("username").value;
+  let pass = document.getElementById("password").value;
+
+  if(user && pass) {
+    currentUser = user;
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("profilePage").classList.remove("hidden");
+    document.getElementById("userDisplay").innerText = "Welcome, " + user;
+  } else {
+    alert("Enter username & password");
+  }
+}
+function goToChat() {
+  document.getElementById("profilePage").classList.add("hidden");
+  document.getElementById("chatPage").classList.remove("hidden");
+}
+function sendMessage() {
+  let msg = document.getElementById("message").value;
+  if(msg) {
+    let chatBox = document.getElementById("chatBox");
+    chatBox.innerHTML += "<p><b>" + currentUser + ":</b> " + msg + "</p>";
+    document.getElementById("message").value = "";
+  }
+}
+</script>
+</body>
+</html>
+<style>
+body { 
+  font-family: sans-serif;
+  margin: 0;
+  <!-- color: #f1f1f1; -->
+  background: #fff;
+}
+.container { 
+  max-width: 400px; 
+  margin: 50px ; 
+  background: #fafafa;
+  padding: 20px; 
+  border-radius: 10px; 
+  box-shadow: 0 0 5px rgb(0, 0, 0);
+}
+input, button { 
+  width: 100%; 
+  padding: 10px; 
+  margin: 5px; 
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0 5px rgb(0, 0, 0);
+}
+button { 
+  background: black; 
+  color: white;
+  cursor: pointer; 
+  box-shadow: 0 0 5px rgb(0, 0, 0);
+}
+.hidden { 
+  display: none; 
+}
+.chat-box { 
+  height: 150px; 
+  overflow-y: auto; 
+  border: 1px solid #ccc; 
+  padding: 10px; 
+}
+</style>

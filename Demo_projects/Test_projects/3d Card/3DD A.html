@@ -1,0 +1,204 @@
+<html>
+<head>
+  <title>3D Card Explode A</title>
+</head>
+<body>
+  <center>
+    <div class="container">
+      <div class="card">
+        <p>
+          <div>Hey, I'm <span class="s1">Meet😅</span></div>
+          <div>I'm a <span class="s2">Frontend Developer</span></div>
+          <div>and also a <span class="s3">Motion Designer.</span></div>
+        </p>
+      </div>
+      <div class="box">
+        <div class="A" id="A">A</div>
+        <div class="A" id="B">B</div>
+        <div class="A" id="C">C</div>
+        <div class="A" id="D">D</div>
+        <div class="A" id="E">E</div>
+      </div>
+    </div>
+  </center>
+</body>
+</html>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top left, #4f46e5, #0f172a 50%), #000;
+    font-family: Inter, sans-serif;
+    overflow: hidden;
+  }
+  .container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+  }
+  .card {
+    position: relative;
+    z-index: 10;
+    width: auto;
+    padding: 15px;
+    border-radius: 30px;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .15);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .5), inset 0 1px 1px rgba(255, 255, 255, .2);
+    color: white;
+    transition: .7s cubic-bezier(.22, 1, .36, 1);
+    animation: float 4s ease-in-out infinite;
+  }
+  .card div {
+    margin: 12px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  span {
+    padding: 5px;
+    border-radius: 5px;
+  }
+  .s1 { background-color: #60a5fa; }
+  .s2 { background-color: #22c55e; }
+  .s3 { background-color: #f97316; }
+  .container:hover .card {
+    transform: rotateX(10deg) rotateY(-10deg) translateY(-10px) scale(1.05);
+  }
+  .A {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 30px;
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(.2) rotate(0deg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, .2);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, .4);
+    transition: 1s cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .container:hover #A {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(-220px, -150px) rotate(-30deg) scale(1);
+  }
+
+  .container:hover #B {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(240px, -150px) rotate(25deg) scale(1);
+  }
+
+  .container:hover #C {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(-250px, 150px) rotate(35deg) scale(1);
+  }
+
+  .container:hover #D {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(250px, 170px) rotate(-25deg) scale(1);
+  }
+
+  .container:hover #E {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(0, -250px) rotate(5deg) scale(1);
+  }
+
+  #A { background: #3b82f6; transition-delay: .05s; }
+  #B { background: #22c55e; transition-delay: .1s;  }
+  #C { background: #f97316; transition-delay: .15s; }
+  #D { background: #ec4899; transition-delay: .2s;  }
+  #E { background: #8b5cf6; transition-delay: .25s; }
+
+  .container:hover .A {
+    box-shadow: 0 40px 80px rgba(0, 0, 0, .6), 0 0 60px currentColor;
+  }
+
+
+</style>
+
+<!-- <style>
+  body{
+    align-content: center;
+  }
+  .A {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.2) rotate(0deg);
+    transition: .8s cubic-bezier(.175, .885, .32, 1.275);
+  }
+  .container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+  }
+  /* Hover */
+  .container:hover #A {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%) translate(-180px, -120px) rotateY(40deg) rotateX(20deg) scale(1);
+  }
+
+  .container:hover #B {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%) translate(180px, -120px) rotateY(-40deg) rotateX(20deg) scale(1);
+  }
+
+  .container:hover #C {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%) translate(-180px, 120px) rotateY(40deg) rotateX(-20deg) scale(1);
+  }
+
+  .container:hover #D {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%) translate(180px, 120px) rotateY(-40deg) rotateX(-20deg) scale(1);
+  }
+
+  .container:hover #E {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%) translate(0, -220px) rotateX(40deg) scale(1);
+  }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    transition: .4s ease;
+  }
+  
+  .container:hover .card {
+    transform:
+      perspective(1000px) rotateX(8deg) scale(1.05);
+  }
+  #A { background: #416bc7; transition-delay: 0s; }
+  #B { background: #30a726; transition-delay: .05s; }
+  #C { background: #fa9638; transition-delay: .1s; }
+  #D { background: #ff4d6d; transition-delay: .15s; }
+  #E { background: #8b5cf6; transition-delay: .2s; }
+
+  .container:hover .A {
+    box-shadow:
+      0 30px 60px rgba(0, 0, 0, .5),
+      0 0 40px rgba(255, 255, 255, .15);
+  }
+</style>  -->

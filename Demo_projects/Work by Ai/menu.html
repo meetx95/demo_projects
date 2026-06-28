@@ -1,0 +1,574 @@
+<html>
+<head>
+  <title>Chat Message</title>
+</head>
+<body>
+  <div class="chat-container" id="appRoot">
+    <div class="chat-header">
+      <h1>DeliverChat <span>live</span></h1>
+      <div class="chat-stats" id="counterDisplay"> 0 messages</div>
+    </div>
+    <div class="messages-panel" id="messagesContainer">
+      <div class="empty-state">No chats</div>
+    </div>
+    <div class="compose-area">
+      <div class="input-group">
+        <textarea class="message-input" id="chatMessageInput" rows="2"
+          placeholder="Write your message..."></textarea>
+        <button class="send-btn" id="sendMessageBtn">Deliver message</button>
+      </div>
+    </div>
+    <footer>Edit or delete any chat • instantly updated</footer>
+  </div>
+</body>
+
+</html>
+<script>
+let messages = [];
+
+function loadMessagesFromStorage() {
+  const stored = localStorage.getItem("deliverchat_messages");
+  if (stored) {
+    try {
+      messages = JSON.parse(stored);
+      messages = messages.map(msg => ({
+        ...msg,
+        updatedAt: msg.updatedAt || null
+      }));
+      return;
+    } catch (e) { console.warn(e); }
+  }
+  messages = [
+    {
+      id: "msg1",
+      text: "Hey! Welcome to DeliverChat — you can update or delete any message!",
+      createdAt: new Date(Date.now() - 3600000).toISOString(),
+      updatedAt: null
+    },
+    {
+      id: "msg2",
+      text: "Click the icon to edit, or to remove. Changes save automatically.",
+      createdAt: new Date(Date.now() - 1800000).toISOString(),
+      updatedAt: null
+    },
+    {
+      id: "msg3",
+      text: "All messages stay in your browser (localStorage). Deploy on Vercel instantly!",
+      createdAt: new Date(Date.now() - 600000).toISOString(),
+      updatedAt: null
+    }
+  ];
+  saveMessagesToStorage();
+}
+
+function saveMessagesToStorage() {
+  localStorage.setItem("deliverchat_messages", JSON.stringify(messages));
+}
+
+function formatTime(isoString, updatedAt = null) {
+  const date = new Date(isoString);
+  const now = new Date();
+  const isToday = date.toDateString() === now.toDateString();
+  let timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  let dateStr = isToday ? `Today ${timeStr}` : `${date.toLocaleDateString()} ${timeStr}`;
+  if (updatedAt) {
+    const updDate = new Date(updatedAt);
+    const updTime = updDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return `${dateStr} • edited ${updTime}`;
+  }
+  return `${dateStr}`;
+}
+
+function addMessage(text) {
+  if (!text || text.trim() === "") return false;
+  const newMessage = {
+    id: Date.now().toString() + '-' + Math.random().toString(36).substr(2, 6),
+    text: text.trim(),
+    createdAt: new Date().toISOString(),
+    updatedAt: null
+  };
+  messages.unshift(newMessage);
+  messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  saveMessagesToStorage();
+  renderMessages();
+  return true;
+}
+
+function updateMessage(id, newText) {
+  if (!newText || newText.trim() === "") return false;
+  const index = messages.findIndex(m => m.id === id);
+  if (index === -1) return false;
+  messages[index].text = newText.trim();
+  messages[index].updatedAt = new Date().toISOString();
+  saveMessagesToStorage();
+  renderMessages();
+  return true;
+}
+
+function deleteMessage(id) {
+  messages = messages.filter(m => m.id !== id);
+  saveMessagesToStorage();
+  renderMessages();
+  return true;
+}
+
+let currentlyEditingId = null;
+let editTextBuffer = "";
+
+function renderMessages() {
+  const container = document.getElementById('messagesContainer');
+  if (!container) return;
+
+  const counterSpan = document.getElementById('counterDisplay');
+  if (counterSpan) {
+    const total = messages.length;
+    counterSpan.innerText = `${total} message${total !== 1 ? 's' : ''}`;
+  }
+
+  if (messages.length === 0) {
+    container.innerHTML = `<div class="empty-state">No chats</div>`;
+    return;
+  }
+
+  let html = '';
+  for (let msg of messages) {
+    const isEditing = (currentlyEditingId === msg.id);
+    const timestampDisplay = formatTime(msg.createdAt, msg.updatedAt);
+    if (isEditing) {
+      html += `
+              <div class="message-card" data-message-id="${msg.id}">
+                  <div class="message-content" style="width:100%;">
+                      <textarea class="edit-input" id="edit-textarea-${msg.id}" rows="2" placeholder="Edit your message...">${escapeHtml(msg.text)}</textarea>
+                      <div class="edit-actions">
+                          <button class="btn-icon save" data-action="save-edit" data-id="${msg.id}">Save</button>
+                          <button class="btn-icon cancel" data-action="cancel-edit" data-id="${msg.id}">✖ Cancel</button>
+                      </div>
+                  </div>
+                  <div class="message-actions">
+                      <!-- small placeholder actions disabled during edit mode, but we keep for style -->
+                  </div>
+              </div>
+      `; 
+    } else {
+      html += `
+              <div class="message-card" data-message-id="${msg.id}">
+                  <div class="message-content">
+                      <div class="message-text">${escapeHtml(msg.text)}</div>
+                      <div class="message-meta">
+                          <span class="timestamp">${timestampDisplay}</span>
+                          ${msg.updatedAt ? '<span class="edited-badge" style="background:#eef2ff; padding:2px 8px; border-radius:20px;">✏️ edited</span>' : ''}
+                      </div>
+                  </div>
+                  <div class="message-actions">
+                      <button class="btn-icon edit" data-action="start-edit" data-id="${msg.id}" title="Edit message">✏️ Edit</button>
+                      <button class="btn-icon delete" data-action="delete" data-id="${msg.id}" title="Delete message">🗑️ Delete</button>
+                  </div>
+              </div>
+      `;
+    }
+  }
+  container.innerHTML = html;
+
+  container.querySelectorAll('.btn-icon').forEach(btn => {
+    btn.removeEventListener('click', handleButtonClick);
+    btn.addEventListener('click', handleButtonClick);
+  });
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>]/g, function (m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
+    return c;
+  });
+}
+
+// central event handler for dynamic buttons
+function handleButtonClick(event) {
+  const btn = event.currentTarget;
+  const action = btn.getAttribute('data-action');
+  const id = btn.getAttribute('data-id');
+  if (!action) return;
+
+  if (action === 'delete' && id) {
+    // confirmation sweet but native confirm
+    if (confirm("❓ Delete this message permanently?")) {
+      deleteMessage(id);
+      if (currentlyEditingId === id) currentlyEditingId = null;
+    }
+  }
+  else if (action === 'start-edit' && id) {
+    // set editing mode
+    currentlyEditingId = id;
+    renderMessages();
+    // auto focus the textarea after render (tiny delay for DOM)
+    setTimeout(() => {
+      const textarea = document.getElementById(`edit-textarea-${id}`);
+      if (textarea) {
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      }
+    }, 30);
+  }
+  else if (action === 'save-edit' && id) {
+    // get new text from textarea element
+    const textareaElem = document.getElementById(`edit-textarea-${id}`);
+    if (textareaElem) {
+      const newVal = textareaElem.value;
+      if (newVal.trim() === "") {
+        alert("Message cannot be empty.");
+        return;
+      }
+      updateMessage(id, newVal);
+      currentlyEditingId = null;
+      renderMessages();
+    } else {
+      // fallback
+      currentlyEditingId = null;
+      renderMessages();
+    }
+  }
+  else if (action === 'cancel-edit' && id) {
+    currentlyEditingId = null;
+    renderMessages();
+  }
+  event.stopPropagation();
+}
+
+function sendNewMessage() {
+  const inputEl = document.getElementById('chatMessageInput');
+  const rawText = inputEl.value;
+  if (!rawText || rawText.trim() === "") {
+    // optional subtle warning
+    inputEl.style.borderColor = "#f97316";
+    setTimeout(() => { inputEl.style.borderColor = "#e2e8f0"; }, 600);
+    return;
+  }
+  const success = addMessage(rawText);
+  if (success) {
+    inputEl.value = "";
+    inputEl.focus();
+    // scroll to top because newest appears on top (perfect)
+    const container = document.getElementById('messagesContainer');
+    if (container) container.scrollTop = 0;
+    // reset any editing mode if active (global)
+    if (currentlyEditingId) {
+      currentlyEditingId = null;
+      renderMessages();
+    }
+  } else {
+    alert("Could not send empty message.");
+  }
+}
+
+function initEventDelegation() {
+  const sendBtn = document.getElementById('sendMessageBtn');
+  if (sendBtn) sendBtn.addEventListener('click', sendNewMessage);
+  const textInput = document.getElementById('chatMessageInput');
+  if (textInput) {
+    textInput.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        sendNewMessage();
+      }
+    });
+  }
+}
+
+function init() {
+  loadMessagesFromStorage();
+  renderMessages();
+  initEventDelegation();
+  window.addEventListener('beforeunload', () => {
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(145deg, #f0f4fa 0%, #e6edf4 100%);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  padding: 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* main chat card */
+.chat-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(2px);
+  border-radius: 2rem;
+  box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* header */
+.chat-header {
+  background: #1f2b3c;
+  color: white;
+  padding: 1.3rem 1.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chat-header h1 {
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-header h1 span {
+  background: #3b82f6;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 40px;
+  font-weight: 500;
+}
+
+.chat-stats {
+  background: #2a3a4e;
+  padding: 6px 14px;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* messages area */
+.messages-panel {
+  background: #ffffff;
+  padding: 1.2rem 1.2rem 0.2rem 1.2rem;
+  max-height: 460px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.messages-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-panel::-webkit-scrollbar-track {
+  background: #eef2f6;
+  border-radius: 8px;
+}
+
+.messages-panel::-webkit-scrollbar-thumb {
+  background: #bac8d9;
+  border-radius: 8px;
+}
+
+/* individual message bubble */
+.message-card {
+  background: #f9fbfd;
+  border-radius: 1.5rem;
+  padding: 1rem 1.2rem;
+  transition: all 0.2s;
+  border: 1px solid #eef2f8;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.message-content {
+  flex: 1;
+}
+
+.message-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.4;
+  word-break: break-word;
+  margin-bottom: 8px;
+}
+
+.message-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.7rem;
+  color: #6c7a91;
+  flex-wrap: wrap;
+}
+
+.timestamp {
+  font-family: monospace;
+}
+
+.message-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 2rem;
+  transition: all 0.2s;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #4b5568;
+}
+
+.btn-icon.edit:hover {
+  background: #eef2ff;
+  color: #2563eb;
+}
+
+.btn-icon.delete:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-icon.save {
+  background: #3b82f6;
+  color: white;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+}
+
+.btn-icon.cancel {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* edit mode */
+.edit-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 1.2rem;
+  font-family: inherit;
+  background: white;
+  transition: 0.2s;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.edit-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* input form */
+.compose-area {
+  background: #ffffff;
+  border-top: 1px solid #e9edf2;
+  padding: 1.2rem 1.5rem 1.8rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message-input {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 2rem;
+  padding: 14px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  resize: vertical;
+  background: #fefefe;
+  transition: 0.2s;
+}
+
+.message-input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.send-btn {
+  background: #1f2b3c;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 3rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.send-btn:hover {
+  background: #0f1822;
+  transform: scale(0.98);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+footer {
+  font-size: 0.7rem;
+  text-align: center;
+  padding: 0.8rem;
+  background: #f8fafc;
+  color: #5b6e8c;
+  border-top: 1px solid #edf2f7;
+}
+
+@media (max-width: 550px) {
+  body {
+    padding: 0.8rem;
+  }
+
+  .message-card {
+    flex-wrap: wrap;
+  }
+
+  .message-actions {
+    margin-left: auto;
+  }
+}
+</style>

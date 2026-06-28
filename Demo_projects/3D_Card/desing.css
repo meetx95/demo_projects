@@ -1,0 +1,85 @@
+body{
+  background: radial-gradient(circle at top, #0b1a2a, #02070d);
+  color: #dbeafe;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  align-content: center;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+:root {
+  --bg: #021C41;
+}
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+}
+
+.card {
+  position: relative;
+  z-index: 10;
+  width: 280px;
+  padding: 15px;
+  border-radius: 30px;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5), inset 0 1px 1px rgba(255, 255, 255, .2);
+  color: white;
+  transition: .7s cubic-bezier(.22, 1, .36, 1);
+  animation: float 4s ease-in-out infinite;
+}
+
+.card div {
+  margin: 12px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+span {
+  padding: 5px;
+  border-radius: 5px;
+  margin-left: auto;
+}
+.s1 { background-color: #60a5fa; }
+.s2 { background-color: #22c55e; }
+.s3 { background-color: #f97316; }
+
+.A {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  padding: 15px;
+  border-radius: 30px;
+  
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.2) rotate(0deg);
+  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, .2);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, .4);
+  transition: 1s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.container:hover #A { opacity: 1; transform: translate(-50%, -50%) translate(-220px, -150px) rotate(-30deg) scale(1); }
+.container:hover #B { opacity: 1; transform: translate(-50%, -50%) translate(0, -230px) rotate(5deg) scale(1);        }
+.container:hover #C { opacity: 1; transform: translate(-50%, -50%) translate(240px, -150px) rotate(25deg) scale(1);   }
+.container:hover #D { opacity: 1; transform: translate(-50%, -50%) translate(-250px, 130px) rotate(35deg) scale(1);   }
+.container:hover #E { opacity: 1; transform: translate(-50%, -50%) translate(200px, 170px) rotate(-20deg) scale(1)    }
+
+#A { background: #27416a; transition-delay: .05s; }
+#B { background: #306e47; transition-delay: .1s;  }
+#C { background: #5b412e; transition-delay: .15s; }
+#D { background: #63374d; transition-delay: .2s;  }
+#E { background: #413360; transition-delay: .25s; }
+
+.container:hover .A {
+  box-shadow: 0 0 80px #00000099;
+}

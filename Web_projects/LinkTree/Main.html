@@ -1,0 +1,98 @@
+<html>
+<head>
+  <title>My Links</title>
+</head>
+
+<body onload="call()">
+
+  <div class="container">
+
+    <!-- Profile -->
+    <img src="Logo.png" class="profile-img">
+    <h1>Meet J. Gamit</h1>
+    <p>All My Social Platforms 🔗</p>
+
+    <a href="#" class="link">Portfolio</a>
+    <a href="" class="link">GitHub</a>
+    <a href="#" class="link">LeetCode</a>
+    <a href="#" class="link">Resume</a>    
+    <a href="#" class="link">Roadmap.sh</a>
+    <a href="#" class="link">Frontend Mentor</a>
+    <a href="#" class="link">CodePen</a>
+    <a href="#" class="link">freeCodeCamp</a>
+    <a href="https://www.linkedin.com/in/meet-gamit-645253310" class="link">LinkedIn</a>
+    <a href="#" class="link">Contact Me</a>
+
+    <div class="footer"><div class="copy"></div></div>
+
+  </div>
+</body>
+</html>
+<script>
+  function call() {
+    var T = new Date();
+    var Y = T.getFullYear();
+    var copy = document.querySelector('.copy');
+    if (copy) {
+      copy.textContent = '© ' + Y + ' Meet J. Gamit';
+    }
+  }
+</script>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.container {
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+.profile-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 2px solid #fff;
+}
+h1 {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+p {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 25px;
+}
+.link {
+  display: block;
+  text-decoration: none;
+  color: white;
+  background: #222;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  transition: 0.3s;
+  border: 1px solid #333;
+}
+.link:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.05);
+}
+.footer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #666;
+}
+</style>

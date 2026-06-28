@@ -1,0 +1,86 @@
+<html>
+
+<head>
+  <title>3D Card Explode B</title>
+</head>
+
+<body>
+  <center>
+    <div class="container">
+      <div class="box">
+        <div class="A" id="A"></div>
+        <div class="A" id="B"></div>
+        <div class="A" id="C"></div>
+        <div class="A" id="D"></div>
+        <div class="A" id="E"></div>
+      </div>
+    </div>
+  </center>
+</body>
+
+</html>
+<style>
+  body {
+    background: #111;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Arial; }
+
+  .box {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    top: 50%;
+    left: 50%;
+    margin: auto;
+    perspective: 1000px;
+    transform: translate(-50%, -50%); }
+
+  .A {
+    border: 1px solid rgba(255, 255, 255, .2);
+    box-shadow: 0 0 10px #97979733;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .1);
+    transform: translate(-50%, -50%);
+    transform-style: preserve-3d;
+    transition: .6s cubic-bezier(.2, .8, .2, 1); }
+
+  #A { background: #416bc7; }
+  #B { background: #30a726; }
+  #C { background: #fa9638; }
+  #D { background: #ff4d6d; }
+  #E { background: #8b5cf6; }
+</style>
+<script>  
+const box = document.querySelector(".box");
+
+box.addEventListener("mouseenter", () => {
+  document.querySelector("#A").style.transform =
+  "translate(-50%,-50%) translate(-150px,-100px) rotateY(40deg) rotateX(20deg)";
+  
+  document.querySelector("#B").style.transform =
+  "translate(-50%,-50%) translate(150px,-100px) rotateY(-40deg) rotateX(20deg)";
+  
+  document.querySelector("#C").style.transform =
+  "translate(-50%,-50%) translate(-150px,100px) rotateY(40deg) rotateX(-20deg)";
+  
+  document.querySelector("#D").style.transform =
+  "translate(-50%,-50%) translate(150px,100px) rotateY(-40deg) rotateX(-20deg)";
+  
+  document.querySelector("#E").style.transform =
+  "translate(-50%,-50%) translate(0,-180px) rotateX(40deg)";
+});
+box.addEventListener("mouseleave", () => {
+  document.querySelectorAll(".A").forEach(item => {
+    item.style.transform = "translate(-50%,-50%)";
+  });
+});
+</script>

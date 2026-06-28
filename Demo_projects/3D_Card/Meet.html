@@ -1,0 +1,42 @@
+<html>
+<head>
+  <title>Meet</title>
+  <script src="Logic.js"></script>
+  <link rel="stylesheet" href="desing.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <p>
+      <div>Hey, I'm <span class="s1">Meet😅</span></div>
+      <div>I'm a <span class="s2" id="type"></span></div>
+      </p>
+    </div>
+    <div class="box">
+      <div class="A" id="A"> <button onclick="loadContent('Aboutme')">About Me</button>About Me</div>
+      <div class="A" id="B"> <button onclick="loadContent('skills')">Skills</button>Skills</div>
+      <div class="A" id="C"> <button onclick="loadContent('projects')">Projects</button>Projects</div>
+      <div class="A" id="D"> <button onclick="loadContent('Motion')">Motion</button>Motion</div>
+      <div class="A" id="E"> <button onclick="loadContent('Contact')">Contact</button>Contact</div>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  const text = [`Frontend Developer`, `Motion Designer`];
+  let p = 0, c = 0, d = false;
+  const tw = document.getElementById('type');
+
+  function type() {
+    const word = text[p];
+    if (!d) {
+      tw.textContent = word.slice(0, ++c);
+      if (c === word.length) { d = true; setTimeout(type, 1800); return; }
+    } else {
+      tw.textContent = word.slice(0, --c);
+      if (c === 0) { d = false; p = (p + 1) % text.length; }
+  }
+  setTimeout(type, 55);
+}
+type();
+</script>

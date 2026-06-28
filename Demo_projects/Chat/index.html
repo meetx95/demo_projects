@@ -1,0 +1,706 @@
+<html>
+
+<head>
+  <title>Chatter · insta style</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000000;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      max-height: 780px;
+      background: #0f0f0f;
+      border-radius: 32px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      position: relative;
+      border: 1px solid #2c2c2e;
+    }
+
+    /* header — snap/insta vibe */
+    .chat-header {
+      background: #0a0a0a;
+      padding: 16px 20px;
+      border-bottom: 0.5px solid #2c2c2e;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .profile-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      background: linear-gradient(145deg, #fd1d1d, #fcb045);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .user-name {
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.3px;
+    }
+
+    .user-name span {
+      font-size: 13px;
+      color: #8e8e93;
+      font-weight: 400;
+    }
+
+    .header-actions i {
+      color: #fff;
+      font-size: 22px;
+      margin-left: 12px;
+      opacity: 0.9;
+    }
+
+    /* messages container — like chat feed */
+    .messages-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 12px 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+      background: #000000;
+    }
+
+    .messages-wrapper::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+    /* chat bubble styles (instagram / snap style) */
+    .message-item {
+      display: flex;
+      width: 100%;
+      animation: fadeSlideUp 0.2s ease;
+    }
+
+    /* my messages (sent by user) -> right aligned */
+    .message-sent {
+      justify-content: flex-end;
+    }
+
+    .message-received {
+      justify-content: flex-start;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 10px 16px;
+      border-radius: 22px;
+      position: relative;
+      word-wrap: break-word;
+      font-size: 15px;
+      line-height: 1.4;
+      transition: all 0.1s;
+    }
+
+    .sent-bubble {
+      background: #3797f0;
+      color: white;
+      border-bottom-right-radius: 5px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    .received-bubble {
+      background: #1c1c1e;
+      color: #eef2ff;
+      border-bottom-left-radius: 5px;
+      border: 0.5px solid #2c2c30;
+    }
+
+    .message-text {
+      font-weight: 470;
+      letter-spacing: -0.2px;
+      white-space: pre-wrap;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 5px;
+      font-size: 9px;
+      opacity: 0.7;
+    }
+
+    .time {
+      font-size: 9px;
+    }
+
+    .edited-badge {
+      font-size: 9px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 6px;
+      border-radius: 30px;
+    }
+
+    /* message actions (hover/context) */
+    .msg-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 8px;
+      opacity: 0;
+      transition: 0.1s;
+    }
+
+    .message-item:hover .msg-actions {
+      opacity: 1;
+    }
+
+    .action-icon {
+      background: #1c1c1e;
+      border-radius: 30px;
+      padding: 6px;
+      font-size: 12px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.1s;
+      width: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-icon.edit:hover {
+      background: #2c6e9e;
+    }
+
+    .action-icon.delete:hover {
+      background: #c9372e;
+    }
+
+    /* edit inline mode */
+    .edit-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .edit-input-field {
+      background: #2c2c30;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 20px;
+      color: white;
+      font-family: inherit;
+      font-size: 14px;
+      width: 100%;
+      outline: none;
+    }
+
+    .edit-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .edit-save,
+    .edit-cancel {
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .edit-save {
+      background: #3797f0;
+      color: white;
+    }
+
+    .edit-cancel {
+      background: #3a3a3c;
+      color: #ddd;
+    }
+
+    /* bottom composer -> like instagram story reply */
+    .composer {
+      background: #0f0f0f;
+      padding: 12px 16px 20px;
+      border-top: 0.5px solid #2c2c2e;
+      backdrop-filter: blur(20px);
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #1c1c1e;
+      border-radius: 30px;
+      padding: 6px 12px;
+    }
+
+    .composer-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 15px;
+      padding: 10px 0;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .composer-input::placeholder {
+      color: #7c7c82;
+      font-weight: 400;
+    }
+
+    .send-circle {
+      background: #3797f0;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .send-circle i {
+      color: white;
+      font-size: 18px;
+    }
+
+    .empty-chat {
+      text-align: center;
+      margin-top: 60px;
+      color: #5c5c62;
+      font-size: 14px;
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* small adjustments */
+    .flex-row {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="chat-header">
+      <div class="profile-area">
+        <div class="avatar">📸</div>
+        <div class="user-name">Meet<span> • now</span></div>
+      </div>
+      <div class="header-actions">
+        <i class="fas fa-camera"></i>
+        <i class="fas fa-ellipsis-h" style="margin-left: 14px"></i>
+      </div>
+    </div>
+
+    <div class="messages-wrapper" id="msgList">
+      <div class="empty-chat" id="emptyState">
+        ✨ say something ✨<br />swipe to edit/delete
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="input-row">
+        <i class="fas fa-plus-circle" style="color: #6b6b70; font-size: 24px"></i>
+        <input type="text" class="composer-input" id="messageInput" placeholder="Message..." autocomplete="off" />
+        <div class="send-circle" id="sendBtn">
+          <i class="fas fa-arrow-up"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --------------------------------------------------------------
+    // data model (with localstorage persistence) — insta/snap style
+    // each message: id, text, createdAt, updatedAt, isOwn (true for sent messages)
+    // we treat all messages as "sent by current user" (like your own chat story)
+    // but we add 'isOwn' to simulate right/left alignment? Actually all messages will be right side (sent)
+    // BUT for social style, let's make messages appear as "sent by me" (right) and for fun simulate some "received" demo?
+    // Actually to mimic insta DM both sides, I'll add ability: all messages written are "me" (right, blue)
+    // still we will show delete/update style + own chats. Very authentic.
+    // For better demo I'll include 2 initial messages from "me" style.
+
+    let messages = [];
+    let currentlyEditingId = null; // message id being edited
+
+    // --- load / save localstorage
+    function loadMessages() {
+      const raw = localStorage.getItem("insta_snap_chats");
+      if (raw) {
+        try {
+          messages = JSON.parse(raw);
+          // ensure each has updatedAt field
+          messages = messages.map((m) => ({
+            ...m,
+            updatedAt: m.updatedAt || null,
+          }));
+          return;
+        } catch (e) { }
+      }
+      messages = [
+        {
+          id: "msg1",
+          text: "Hey! 👋 this is your chat. edit or delete any message ✨",
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
+          updatedAt: null,
+        }, {
+          id: "msg2",
+          text: "Tap ✏️ to edit, 🗑️ to delete — like real instagram DMs",
+          createdAt: new Date(Date.now() - 43200000).toISOString(),
+          updatedAt: null,
+        }, {
+          id: "msg3",
+          text: "everything saves automatically ✨ deliver anywhere",
+          createdAt: new Date(Date.now() - 7200000).toISOString(),
+          updatedAt: null,
+        },
+      ];
+      saveMessages();
+    }
+
+    function saveMessages() {
+      localStorage.setItem("insta_snap_chats", JSON.stringify(messages));
+    }
+
+    function timeAgoOrFormat(isoDate, updatedIso = null) {
+      const date = new Date(isoDate);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      let timeStr = "";
+      if (diffMins < 1) timeStr = "just now";
+      else if (diffMins < 60) timeStr = `${diffMins}m`;
+      else if (diffHours < 24) timeStr = `${diffHours}h`;
+      else timeStr = `${diffDays}d`;
+
+      if (updatedIso) {
+        const updDate = new Date(updatedIso);
+        const updMins = Math.floor((now - updDate) / 60000);
+        let updStr =
+          updMins < 60 ? `${updMins}m` : `${Math.floor(updMins / 60)}h`;
+        return `${timeStr} • edited ${updStr}`;
+      }
+      return timeStr;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/[&<>]/g, function (m) {
+          if (m === "&") return "&amp;";
+          if (m === "<") return "&lt;";
+          if (m === ">") return "&gt;";
+          return m;
+        })
+        .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
+          return c;
+        });
+    }
+
+    // CRUD actions
+    function addNewMessage(text) {
+      if (!text || text.trim() === "") return false;
+      const newMsg = {
+        id: Date.now().toString() + "-" + Math.floor(Math.random() * 10000),
+        text: text.trim(),
+        createdAt: new Date().toISOString(),
+        updatedAt: null,
+      };
+      messages.unshift(newMsg); // newest on top (like insta DM list)
+      saveMessages();
+      renderChat();
+      scrollToTop();
+      return true;
+    }
+
+    function updateMessage(id, newText) {
+      if (!newText.trim()) return false;
+      const index = messages.findIndex((m) => m.id === id);
+      if (index === -1) return false;
+      messages[index].text = newText.trim();
+      messages[index].updatedAt = new Date().toISOString();
+      saveMessages();
+      renderChat();
+      return true;
+    }
+
+    function deleteMessage(id) {
+      messages = messages.filter((m) => m.id !== id);
+      if (currentlyEditingId === id) currentlyEditingId = null;
+      saveMessages();
+      renderChat();
+    }
+
+    // scroll to top (new messages)
+    function scrollToTop() {
+      const container = document.getElementById("msgList");
+      if (container) container.scrollTop = 0;
+    }
+
+    // render beautiful message feed (like snapchat/insta)
+    function renderChat() {
+      const container = document.getElementById("msgList");
+      const emptyDiv = document.getElementById("emptyState");
+      if (!container) return;
+
+      if (messages.length === 0) {
+        if (emptyDiv) emptyDiv.style.display = "block";
+        container.innerHTML = `<div class="empty-chat" id="emptyState">no messages yet <br>type something cool</div>`;
+        return;
+      }
+
+      let html = "";
+      for (let msg of messages) {
+        const isEditing = currentlyEditingId === msg.id;
+        const timeDisplay = timeAgoOrFormat(msg.createdAt, msg.updatedAt);
+        const showEdited = msg.updatedAt ? true : false;
+
+        if (isEditing) {
+          // Edit mode (inline, stylish)
+          html += `
+            <div class="message-item message-sent" data-msg-id="${msg.id}">
+              <div class="bubble sent-bubble" style="background:#1c1c1e; border:1px solid #3797f0; width:85%;">
+                <div class="edit-container">
+                  <textarea class="edit-input-field" id="editArea_${msg.id}" rows="2">${escapeHtml(msg.text)}</textarea>
+                  <div class="edit-buttons">
+                    <button class="edit-save" data-action="saveEdit" data-id="${msg.id}">Save</button>
+                    <button class="edit-cancel" data-action="cancelEdit" data-id="${msg.id}">Cancel</button>
+                  </div>
+                </div>
+              </div>
+              <div class="msg-actions"></div>
+            </div>
+          `;
+        } else {
+          // Normal mode – Instagram style right bubble with actions on hover
+          html += `
+            <div class="message-item message-sent" data-msg-id="${msg.id}">
+              <div class="bubble sent-bubble">
+                <div class="message-text">${escapeHtml(msg.text)}</div>
+                <div class="meta-row">
+                  <span class="time">${timeDisplay}</span>
+                  ${showEdited ? '<span class="edited-badge">✎ edited</span>' : ""}
+                </div>
+              </div>              
+              <div class="msg-actions">
+                <div class="action-icon edit" data-action="startEdit" data-id="${msg.id}" title="Edit message"><i class="fas fa-pencil-alt"></i></div>
+                <div class="action-icon delete" data-action="deleteMsg" data-id="${msg.id}" title="Delete message"><i class="fas fa-trash-alt"></i></div>
+              </div>
+            </div>
+          `;
+        }
+      }
+      container.innerHTML = html;
+
+      // attach event listeners to dynamic elements
+      attachMessageEvents();
+      // after edit mode focus on textarea
+      if (currentlyEditingId) {
+        setTimeout(() => {
+          const ta = document.getElementById(
+            `editArea_${currentlyEditingId}`,
+          );
+          if (ta) {
+            ta.focus();
+            ta.setSelectionRange(ta.value.length, ta.value.length);
+          }
+        }, 30);
+      }
+    }
+
+    // attach all event handlers (action buttons)
+    function attachMessageEvents() {
+      // edit buttons (startEdit / deleteMsg)
+      const editTriggers = document.querySelectorAll(
+        '[data-action="startEdit"]',
+      );
+      const deleteTriggers = document.querySelectorAll(
+        '[data-action="deleteMsg"]',
+      );
+      const saveTriggers = document.querySelectorAll(
+        '[data-action="saveEdit"]',
+      );
+      const cancelTriggers = document.querySelectorAll(
+        '[data-action="cancelEdit"]',
+      );
+
+      editTriggers.forEach((btn) => {
+        btn.removeEventListener("click", handleStartEdit);
+        btn.addEventListener("click", handleStartEdit);
+      });
+      deleteTriggers.forEach((btn) => {
+        btn.removeEventListener("click", handleDelete);
+        btn.addEventListener("click", handleDelete);
+      });
+      saveTriggers.forEach((btn) => {
+        btn.removeEventListener("click", handleSaveEdit);
+        btn.addEventListener("click", handleSaveEdit);
+      });
+      cancelTriggers.forEach((btn) => {
+        btn.removeEventListener("click", handleCancelEdit);
+        btn.addEventListener("click", handleCancelEdit);
+      });
+    }
+
+    function handleStartEdit(e) {
+      const btn = e.currentTarget;
+      const id = btn.getAttribute("data-id");
+      if (id) {
+        currentlyEditingId = id;
+        renderChat();
+      }
+      e.stopPropagation();
+    }
+
+    function handleDelete(e) {
+      const btn = e.currentTarget;
+      const id = btn.getAttribute("data-id");
+      if (id && confirm("Delete this message? 🗑️")) {
+        deleteMessage(id);
+      }
+      e.stopPropagation();
+    }
+
+    function handleSaveEdit(e) {
+      const btn = e.currentTarget;
+      const id = btn.getAttribute("data-id");
+      if (id) {
+        const textarea = document.getElementById(`editArea_${id}`);
+        if (textarea) {
+          const newValue = textarea.value;
+          if (newValue.trim() === "") {
+            // optional little feedback
+            textarea.style.border = "1px solid #ff4d4d";
+            setTimeout(() => {
+              textarea.style.border = "none";
+            }, 400);
+            return;
+          }
+          updateMessage(id, newValue);
+          currentlyEditingId = null;
+          renderChat();
+        } else {
+          currentlyEditingId = null;
+          renderChat();
+        }
+      }
+      e.stopPropagation();
+    }
+
+    function handleCancelEdit(e) {
+      currentlyEditingId = null;
+      renderChat();
+      e.stopPropagation();
+    }
+
+    // send new message
+    function sendMessage() {
+      const inputField = document.getElementById("messageInput");
+      const rawText = inputField.value;
+      if (!rawText || rawText.trim() === "") {
+        // insta-like subtle shake
+        inputField.style.border = "1px solid #ff3b30";
+        setTimeout(() => {
+          inputField.style.border = "none";
+        }, 300);
+        return;
+      }
+      const success = addNewMessage(rawText);
+      if (success) {
+        inputField.value = "";
+        inputField.focus();
+        if (currentlyEditingId) {
+          currentlyEditingId = null;
+          renderChat();
+        }
+      }
+    }
+
+    // keyboard events + extra
+    function initEvents() {
+      const sendButton = document.getElementById("sendBtn");
+      const messageInput = document.getElementById("messageInput");
+      if (sendButton) sendButton.addEventListener("click", sendMessage);
+      if (messageInput) {
+        messageInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+      // extra: click away & stop editing? but we keep cancel button.
+      document.addEventListener("click", function (e) {
+        // if user clicks outside edit area and we are in edit mode? not needed for UX, we keep explicit cancel
+        // but we want to keep it consistent, no issue.
+      });
+    }
+
+    // load & render
+    function bootstrap() {
+      loadMessages();
+      renderChat();
+      initEvents();
+      scrollToTop();
+    }
+
+    bootstrap();
+  </script>
+</body>
+
+</html>

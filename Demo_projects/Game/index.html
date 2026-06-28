@@ -1,0 +1,183 @@
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Tic Tac Toe</h1>
+    <div id="status">Player X's Turn</div>
+    <div class="board" id="gameBoard">
+      <div class="cell" data-cell-index="0"></div>
+      <div class="cell" data-cell-index="1"></div>
+      <div class="cell" data-cell-index="2"></div>
+      <div class="cell" data-cell-index="3"></div>
+      <div class="cell" data-cell-index="4"></div>
+      <div class="cell" data-cell-index="5"></div>
+      <div class="cell" data-cell-index="6"></div>
+      <div class="cell" data-cell-index="7"></div>
+      <div class="cell" data-cell-index="8"></div>
+    </div>
+    <button id="restartButton">Restart Game</button>
+  </div>
+</body>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #191919, #1f1f2e);
+  margin: 0;
+}
+.container{
+  text-align: center;
+  background: #222;
+  padding: 50px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.container:hover{
+  background-color: #191919;
+  box-shadow: 0 0 4px #006efe;
+  transition: 0.3s ease-out;
+}
+h1{
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+#status{
+  margin-bottom: 15px;
+  font-size: 1.2em;
+  color: #b3b3b3;
+}
+.board{
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 10px;
+  margin: 0 auto 20px;
+  width: 320px; /* 3 * 100px + 2 * 5px */
+  border-radius: 8px;
+}
+.cell{
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.cell:hover{
+  background-color: #bdbdbd;
+}
+.cell.X{
+  color: #e74c3c;
+}
+.cell.O{
+  color: #3498db;
+}
+#restartButton{
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #2ecc71;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+#restartButton:hover{
+  background-color: #27ae60;
+}
+</style>
+<script>
+  const cells = document.querySelectorAll('.cell');
+  const statusText = document.getElementById('status');
+  const restartButton = document.getElementById('restartButton');
+
+  let currentPlayer = 'X';
+  let gameActive = true;
+  let board = ['', '', '', '', '', '', '', '', ''];
+
+  const winningConditions = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6]             // Diagonals
+  ];
+
+  function handleCellClick(e) {
+    const clickedCell = e.target;
+    const clickedCellIndex = parseInt(clickedCell.dataset.cellIndex);
+
+    if (board[clickedCellIndex] !== '' || !gameActive) {
+      return;
+    }
+
+    board[clickedCellIndex] = currentPlayer;
+    clickedCell.textContent = currentPlayer;
+    clickedCell.classList.add(currentPlayer);
+
+    checkResult();
+  }
+
+  function checkResult() {
+    let roundWon = false;
+    for (let i = 0; i < winningConditions.length; i++) {
+      const winCondition = winningConditions[i];
+      let a = board[winCondition[0]];
+      let b = board[winCondition[1]];
+      let c = board[winCondition[2]];
+
+      if (a === '' || b === '' || c === '') {
+        continue;
+      }
+      if (a === b && b === c) {
+        roundWon = true;
+        break;
+      }
+    }
+
+    if (roundWon) {
+      statusText.textContent = `Player ${currentPlayer} Wins!`;
+      gameActive = false;
+      return;
+    }
+
+    let roundDraw = !board.includes('');
+    if (roundDraw) {
+      statusText.textContent = 'It\'s a Draw!';
+      gameActive = false;
+      return;
+    }
+
+    changePlayer();
+  }
+
+  function changePlayer() {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    statusText.textContent = `Player ${currentPlayer}'s Turn`;
+  }
+
+  function restartGame() {
+    currentPlayer = 'X';
+    gameActive = true;
+    board = ['', '', '', '', '', '', '', '', ''];
+    statusText.textContent = `Player ${currentPlayer}'s Turn`;
+    cells.forEach(cell => {
+      cell.textContent = '';
+      cell.classList.remove('X', 'O');
+    });
+  }
+
+  cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+  restartButton.addEventListener('click', restartGame);
+</script>
+</html>

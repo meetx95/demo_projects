@@ -1,0 +1,24 @@
+  :root {
+    --text: #fff;
+    --b0: #0f5038;
+    --b1: linear-gradient(85deg, #129c81, #00462c);
+    --b2: linear-gradient(185deg, #35577d, #141e30);
+    --b3: linear-gradient(85deg, #0B3037, #143e5e);
+    --b4: #502d55;
+    --b5: #935073;
+    --b6: #f6dbc0;
+    --b7: #f8f4e9;
+    --b8: #16212b;
+    --b9: #2b161f;
+    --b10: #1b1e1f;
+    --border: 1px solid #ffffff33;
+    --border1: 1px solid #ffffff;
+    --radius: 20px;
+    --shadow: 0 0 10px #0000001a;
+    --nah: 5px;
+    --t1: #416bc7;
+    --t2: #30a726;
+    --t3: #50938a;
+    --t4: #fa9638;
+    --tshadow: 0 0 10px #000000;
+  }
